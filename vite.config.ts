@@ -1,3 +1,4 @@
+import { resolve } from "node:path";
 import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
@@ -17,7 +18,6 @@ function injectSeoPlugin(): Plugin {
       const crawlerFallback = buildCrawlerFallbackHtml();
 
       return html
-        .replace(/<!-- root-redirect:start -->[\s\S]*?<!-- root-redirect:end -->\s*/, "")
         .replace("<!-- seo:tags -->", seoTags)
         .replace(
           "<!-- seo:json-ld -->",
@@ -39,7 +39,13 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), injectSeoPlugin()],
   // Relative paths work for custom domains, github.io/Sam-Portfolio/, and Live Server.
   base: "./",
+  build: {
+    rollupOptions: {
+      input: resolve(__dirname, "app.html"),
+    },
+  },
   server: {
+    open: "/app.html",
     proxy: {
       "/api/github": {
         target: "https://api.github.com",

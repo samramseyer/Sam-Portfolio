@@ -9,13 +9,7 @@
         var host = location.hostname;
         var path = location.pathname;
 
-        if (host === "localhost" || host === "127.0.0.1") {
-          if (path === "/" || path === "/index.html") {
-            location.replace("/app.html" + location.search + location.hash);
-          }
-          return;
-        }
-
+        if (host === "localhost" || host === "127.0.0.1") return;
         if (path.indexOf("/docs") !== -1) return;
 
         var target = null;
@@ -33,6 +27,7 @@
         }
       })();
     </script>
+    <meta http-equiv="refresh" content="0;url=/docs/" />
     <style>
       body {
         margin: 0;

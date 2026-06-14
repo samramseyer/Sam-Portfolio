@@ -25,12 +25,12 @@ jobs:
 
       - run: npm ci
       - run: npm run build
-      - run: cp dist/index.html dist/404.html
+      - run: cp dist/app.html dist/index.html && cp dist/app.html dist/404.html
 
       - name: Verify production build
         run: |
           grep -q './assets/' dist/index.html
-          grep -qE 'index-.*\.js' dist/index.html
+          grep -qE '(index|app)-.*\.js' dist/index.html
           grep -q 'og:title' dist/index.html
           grep -q 'og:image' dist/index.html
           grep -q 'application/ld+json' dist/index.html
