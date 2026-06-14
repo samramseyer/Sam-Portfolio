@@ -31,40 +31,117 @@ export interface GitHubProfile {
   html_url: string;
 }
 
-const GITHUB_API = "https://api.github.com";
+// Dev uses the Vite proxy (/api/github) for reliable headers and fewer CORS edge cases.
+const GITHUB_API = import.meta.env.DEV ? "/api/github" : "https://api.github.com";
+const CACHE_TTL_MS = 10 * 60 * 1000;
+const CACHE_PREFIX = "github-cache:";
 
-function authHeaders(): HeadersInit {
-  const token = import.meta.env.VITE_GITHUB_TOKEN;
-  if (token) {
-    return {
-      Authorization: `Bearer ${token}`,
-      Accept: "application/vnd.github+json",
-    };
-  }
-  return { Accept: "application/vnd.github+json" };
+function hasToken(): boolean {
+  return Boolean(import.meta.env.VITE_GITHUB_TOKEN);
 }
 
-async function fetchJson<T>(url: string): Promise<T> {
+function authHeaders(): HeadersInit {
+  const headers: Record<string, string> = {
+    Accept: "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28",
+  };
+
+  const token = import.meta.env.VITE_GITHUB_TOKEN;
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  return headers;
+}
+
+function getCached<T>(url: string): T | null {
+  try {
+    const raw = sessionStorage.getItem(`${CACHE_PREFIX}${url}`);
+    if (!raw) return null;
+
+    const { expires, data } = JSON.parse(raw) as { expires: number; data: T };
+    if (Date.now() > expires) {
+      sessionStorage.removeItem(`${CACHE_PREFIX}${url}`);
+      return null;
+    }
+
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+function setCached<T>(url: string, data: T): void {
+  try {
+    sessionStorage.setItem(
+      `${CACHE_PREFIX}${url}`,
+      JSON.stringify({ expires: Date.now() + CACHE_TTL_MS, data }),
+    );
+  } catch {
+    // Ignore quota errors — cache is optional.
+  }
+}
+
+async function parseGitHubError(response: Response): Promise<string> {
+  const remaining = response.headers.get("x-ratelimit-remaining");
+  const reset = response.headers.get("x-ratelimit-reset");
+
+  if (response.status === 403 && remaining === "0") {
+    const resetTime = reset
+      ? new Date(Number(reset) * 1000).toLocaleTimeString()
+      : "soon";
+    return `GitHub API rate limit exceeded. Resets around ${resetTime}. Add VITE_GITHUB_TOKEN in .env for higher limits.`;
+  }
+
+  if (response.status === 401) {
+    return "GitHub API authentication failed. Check VITE_GITHUB_TOKEN in .env.";
+  }
+
+  if (response.status === 404) {
+    return "GitHub API resource not found. Check githubUsername and organization slugs in site config.";
+  }
+
+  try {
+    const body = (await response.json()) as { message?: string };
+    if (body.message) {
+      return `GitHub API error (${response.status}): ${body.message}`;
+    }
+  } catch {
+    // Response body was not JSON.
+  }
+
+  return `GitHub API error (${response.status})`;
+}
+
+async function githubFetch(url: string): Promise<Response> {
   const response = await fetch(url, { headers: authHeaders() });
 
   if (!response.ok) {
-    throw new Error(`GitHub API error (${response.status}): ${url}`);
+    throw new Error(await parseGitHubError(response));
   }
 
-  return response.json() as Promise<T>;
+  return response;
+}
+
+async function fetchJson<T>(url: string): Promise<T> {
+  const cached = getCached<T>(url);
+  if (cached) return cached;
+
+  const response = await githubFetch(url);
+  const data = (await response.json()) as T;
+  setCached(url, data);
+  return data;
 }
 
 async function fetchAllPages<T>(url: string, maxPages = 3): Promise<T[]> {
+  const cached = getCached<T[]>(url);
+  if (cached) return cached;
+
   const results: T[] = [];
   let nextUrl: string | null = url;
 
   for (let page = 0; page < maxPages && nextUrl; page++) {
-    const response = await fetch(nextUrl, { headers: authHeaders() });
-
-    if (!response.ok) {
-      throw new Error(`GitHub API error (${response.status}): ${nextUrl}`);
-    }
-
+    const response = await githubFetch(nextUrl);
     const pageData = (await response.json()) as T[];
     results.push(...pageData);
 
@@ -72,6 +149,7 @@ async function fetchAllPages<T>(url: string, maxPages = 3): Promise<T[]> {
     nextUrl = parseNextLink(linkHeader);
   }
 
+  setCached(url, results);
   return results;
 }
 
@@ -86,7 +164,15 @@ function parseNextLink(linkHeader: string | null): string | null {
   if (!match) return null;
 
   const urlMatch = match.match(/<([^>]+)>/);
-  return urlMatch?.[1] ?? null;
+  const nextUrl = urlMatch?.[1] ?? null;
+  if (!nextUrl) return null;
+
+  // Keep paginated requests on the dev proxy when GitHub returns absolute URLs.
+  if (import.meta.env.DEV && nextUrl.startsWith("https://api.github.com")) {
+    return nextUrl.replace("https://api.github.com", "/api/github");
+  }
+
+  return nextUrl;
 }
 
 function isHidden(name: string): boolean {
@@ -94,11 +180,33 @@ function isHidden(name: string): boolean {
   return hidden.includes(name.toLowerCase());
 }
 
+function mergeRepos(repoLists: GitHubRepo[][]): GitHubRepo[] {
+  const merged = new Map<number, GitHubRepo>();
+
+  for (const repo of repoLists.flat()) {
+    if (isHidden(repo.name)) continue;
+    merged.set(repo.id, repo);
+  }
+
+  return Array.from(merged.values()).sort(
+    (a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
+  );
+}
+
 export async function fetchGitHubProfile(): Promise<GitHubProfile> {
+  if (hasToken()) {
+    return fetchJson<GitHubProfile>(`${GITHUB_API}/user`);
+  }
+
   return fetchJson<GitHubProfile>(`${GITHUB_API}/users/${siteConfig.githubUsername}`);
 }
 
 export async function fetchUserRepos(): Promise<GitHubRepo[]> {
+  if (hasToken()) {
+    const url = `${GITHUB_API}/user/repos?affiliation=owner,organization_member,collaborator&per_page=100&sort=updated&direction=desc`;
+    return fetchAllPages<GitHubRepo>(url);
+  }
+
   const url = `${GITHUB_API}/users/${siteConfig.githubUsername}/repos?per_page=100&sort=updated&direction=desc`;
   return fetchAllPages<GitHubRepo>(url);
 }
@@ -109,21 +217,28 @@ export async function fetchOrgRepos(org: string): Promise<GitHubRepo[]> {
 }
 
 export async function fetchAllProjects(): Promise<GitHubRepo[]> {
-  const [profileRepos, ...orgRepoLists] = await Promise.all([
+  const results = await Promise.allSettled([
     fetchUserRepos(),
     ...siteConfig.organizations.map((org) => fetchOrgRepos(org)),
   ]);
 
-  const merged = new Map<number, GitHubRepo>();
+  const repoLists: GitHubRepo[][] = [];
+  const errors: string[] = [];
 
-  for (const repo of [...profileRepos, ...orgRepoLists.flat()]) {
-    if (isHidden(repo.name)) continue;
-    merged.set(repo.id, repo);
+  for (const result of results) {
+    if (result.status === "fulfilled") {
+      repoLists.push(result.value);
+    } else {
+      errors.push(result.reason instanceof Error ? result.reason.message : String(result.reason));
+    }
   }
 
-  return Array.from(merged.values()).sort(
-    (a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
-  );
+  const repos = mergeRepos(repoLists);
+  if (repos.length === 0 && errors.length > 0) {
+    throw new Error(errors[0]);
+  }
+
+  return repos;
 }
 
 export function formatRelativeDate(isoDate: string): string {

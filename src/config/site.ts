@@ -32,8 +32,8 @@ export const siteConfig = {
   featuredProject: {
     name: "TechHelp Hub",
     tagline: "Full-stack MERN Q&A forum — my capstone-style build",
-    demoUrl: "https://samramseyer.github.io/project-4/",
-    repoUrl: "https://github.com/samramseyer/project-4",
+    demoUrl: "https://samramseyer.github.io/Tech-Help/",
+    repoUrl: "https://github.com/samramseyer/Tech-Help",
     stack: ["React", "Node.js", "Express", "MongoDB"],
   },
 

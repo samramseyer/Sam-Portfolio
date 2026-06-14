@@ -63,9 +63,6 @@ export function Hero({ profile }: HeroProps) {
               <span>
                 <strong className="text-sand">{profile.public_repos}</strong> public repos
               </span>
-              <span>
-                <strong className="text-sand">{profile.followers}</strong> followers
-              </span>
             </div>
           )}
         </div>
