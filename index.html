@@ -15,6 +15,18 @@
       rel="stylesheet"
     />
     <title>Sam Ramseyer | Builder & Full Stack Developer</title>
+    <script>
+      (function () {
+        var host = location.hostname;
+        var isLocal = host === "localhost" || host === "127.0.0.1";
+        var path = location.pathname;
+        var onDocsPath = path.includes("/docs/");
+        if (!isLocal && !onDocsPath) {
+          if (!path.endsWith("/")) path += "/";
+          location.replace(path + "docs/" + location.search + location.hash);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
