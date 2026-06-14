@@ -296,3 +296,13 @@ export function getProjectDescription(repo: GitHubRepo): string {
 
   return "Personal development project — open the repo to explore the code and README.";
 }
+
+export function getProjectDemoUrl(repo: GitHubRepo): string | null {
+  const override = findProjectOverride(repo);
+  if (override?.demoUrl) return override.demoUrl;
+  if (repo.homepage) return repo.homepage;
+  if (repo.has_pages) {
+    return `https://${repo.owner.login}.github.io/${repo.name}/`;
+  }
+  return null;
+}

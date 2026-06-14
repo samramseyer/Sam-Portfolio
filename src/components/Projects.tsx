@@ -2,6 +2,7 @@ import { useMemo, useState, type ReactNode } from "react";
 import { siteConfig } from "../config/site";
 import {
   formatRelativeDate,
+  getProjectDemoUrl,
   getProjectDescription,
   getProjectTitle,
   languageColor,
@@ -128,17 +129,9 @@ function FilterButton({
   );
 }
 
-function getDemoUrl(repo: GitHubRepo): string | null {
-  if (repo.homepage) return repo.homepage;
-  if (repo.has_pages) {
-    return `https://${repo.owner.login}.github.io/${repo.name}/`;
-  }
-  return null;
-}
-
 function ProjectCard({ repo }: { repo: GitHubRepo }) {
   const isOrg = repo.owner.type === "Organization";
-  const demoUrl = getDemoUrl(repo);
+  const demoUrl = getProjectDemoUrl(repo);
   const title = getProjectTitle(repo);
   const description = getProjectDescription(repo);
 

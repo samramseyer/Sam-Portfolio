@@ -69,6 +69,7 @@ export const siteConfig = {
       title: "Todo List App",
       description:
         "React single-page app with full todo CRUD, status filters, keyboard accessibility, and a validated contact form — routing, state, and UX patterns in one project.",
+      demoUrl: "https://samramseyer.github.io/Todo-App/",
     },
     "Tech-Help": {
       title: "TechHelp Hub",
@@ -80,7 +81,7 @@ export const siteConfig = {
       description:
         "GIF search app powered by the Giphy REST API — fetch and display results in a responsive layout with clean CSS and live API integration.",
     },
-  } as Record<string, { title?: string; description: string }>,
+  } as Record<string, { title?: string; description: string; demoUrl?: string }>,
 
   about: [
     "I joined the U.S. Army in 2006 and was dual MOS-qualified as a 21E Heavy Equipment Operator and an 88M Motor Transport Operator — moving earth, running machinery, and keeping missions rolling on the road.",
