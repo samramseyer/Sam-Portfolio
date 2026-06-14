@@ -1,9 +1,42 @@
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import {
+  buildCrawlerFallbackHtml,
+  buildJsonLd,
+  buildSeoHeadTags,
+  seo,
+} from "./src/config/seo";
+
+function injectSeoPlugin(): Plugin {
+  return {
+    name: "inject-seo",
+    transformIndexHtml(html) {
+      const seoTags = buildSeoHeadTags();
+      const jsonLd = buildJsonLd();
+      const crawlerFallback = buildCrawlerFallbackHtml();
+
+      return html
+        .replace(/<!-- root-redirect:start -->[\s\S]*?<!-- root-redirect:end -->\s*/, "")
+        .replace("<!-- seo:tags -->", seoTags)
+        .replace(
+          "<!-- seo:json-ld -->",
+          `<script type="application/ld+json">${jsonLd}</script>`,
+        )
+        .replace(
+          "<!-- seo:crawler-fallback -->",
+          `<noscript>${crawlerFallback}</noscript>`,
+        )
+        .replace(
+          "<title>Sam Ramseyer | Builder & Full Stack Developer</title>",
+          `<title>${seo.title}</title>`,
+        );
+    },
+  };
+}
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), injectSeoPlugin()],
   // Relative paths work for custom domains, github.io/Sam-Portfolio/, and Live Server.
   base: "./",
   server: {

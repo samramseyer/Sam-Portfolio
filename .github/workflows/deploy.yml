@@ -31,6 +31,16 @@ jobs:
         run: |
           grep -q './assets/' dist/index.html
           grep -qE 'index-.*\.js' dist/index.html
+          grep -q 'og:title' dist/index.html
+          grep -q 'og:image' dist/index.html
+          grep -q 'application/ld+json' dist/index.html
+          test -f dist/og-image.png
+          test -f dist/robots.txt
+          test -f dist/sitemap.xml
+          if grep -qE '^<<<<<<<|^=======|^>>>>>>>' docs/index.html 2>/dev/null; then
+            echo "docs/index.html has unresolved merge conflict markers"
+            exit 1
+          fi
           if grep -q '/src/main.tsx' dist/index.html; then
             echo "Build failed: dist still references source files"
             exit 1

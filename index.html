@@ -4,10 +4,30 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Sam Ramseyer — Full Stack Developer building scalable web applications, developer tools, and AI-powered products. Army veteran, carpenter, UT Full Stack Software Engineering (2025)."
-    />
+    <!-- root-redirect:start -->
+    <script>
+      (function () {
+        var host = location.hostname;
+        if (host === "localhost" || host === "127.0.0.1") return;
+
+        var path = location.pathname;
+        if (path.includes("/docs")) return;
+
+        var docsPath = null;
+        if (host === "samramseyer.com" || host === "www.samramseyer.com") {
+          docsPath = "/docs/";
+        } else if (host.endsWith("github.io") && path.includes("Sam-Portfolio")) {
+          docsPath = "/Sam-Portfolio/docs/";
+        }
+
+        if (docsPath) {
+          location.replace(docsPath + location.search + location.hash);
+        }
+      })();
+    </script>
+    <!-- root-redirect:end -->
+    <!-- seo:tags -->
+    <!-- seo:json-ld -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -17,6 +37,7 @@
     <title>Sam Ramseyer | Builder & Full Stack Developer</title>
   </head>
   <body>
+    <!-- seo:crawler-fallback -->
     <div id="root"></div>
     <!-- Vite dev: use "npm start". Live Server: run "npm run build" first (serves dist/). -->
     <script type="module" src="/src/main.tsx"></script>

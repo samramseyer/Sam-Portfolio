@@ -4,9 +4,12 @@ export const professionalTitle =
 export const siteConfig = {
   name: "Sam Ramseyer",
   title: professionalTitle,
-  heroEyebrow: "Carpenter · Developer · Veteran",
+  heroEyebrow: "Finish Carpenter · Developer · Veteran",
+  heroRole: "Full Stack Developer",
+  heroSubline:
+    "Scalable web applications · developer tools · AI-powered products",
   tagline:
-    "I've spent most of my life building things with my hands — custom cabinets, precise trim, heavy equipment, and convoys. Today I bring that same care for craft, structure, and detail to full stack web development.",
+    "I've spent most of my life working with my hands — installing custom cabinets, hanging precise trim, running heavy equipment, and convoys. Today I bring that same care for craft, structure, and detail to full stack web development.",
   email: "sam.ramseyer.88@gmail.com",
   githubUsername: "samramseyer",
   githubUrl: "https://github.com/samramseyer",
@@ -81,7 +84,7 @@ export const siteConfig = {
 
   about: [
     "I joined the U.S. Army in 2006 and was dual MOS-qualified as a 21E Heavy Equipment Operator and an 88M Motor Transport Operator — moving earth, running machinery, and keeping missions rolling on the road.",
-    "Outside of the military, I've spent most of my life as a carpenter specializing in custom cabinetry and trim. That work taught me patience, precision, and pride in the finish — whether the project is a built-in bookshelf or a production web app.",
+    "Outside of the military, I've spent most of my life as a carpenter in custom cabinetry and trim carpentry — installing cabinets and trim, not building them from scratch. That work taught me patience, precision, and pride in the finish — whether the job is a kitchen run or a production web app.",
     "I hold a bachelor's degree in public relations and marketing, which shaped how I think about messaging, audience, and presenting work clearly. In 2025, I earned my Full Stack Software Engineering certificate from the University of Tennessee — bringing formal training in modern web development together with everything I learned on the job site and in the field.",
     "Today I'm focused on building scalable web applications, developer tools, and AI-powered products — writing clean code, crafting responsive interfaces, and shipping work that holds up over time.",
   ],
@@ -89,7 +92,7 @@ export const siteConfig = {
   highlights: [
     professionalTitle,
     "U.S. Army veteran (since 2006) — dual MOS 21E & 88M",
-    "Custom cabinetry and trim carpenter",
+    "Custom cabinetry and trim carpentry — cabinet and trim installation",
     "Full Stack Software Engineering certificate — University of Tennessee (2025)",
     "Bachelor's in Public Relations & Marketing",
   ],
@@ -119,9 +122,9 @@ export const siteConfig = {
       category: "Trade & Craft",
       theme: "craft",
       description:
-        "Most of my life has been spent in the shop — custom cabinetry, detailed trim, and finish work that has to look right up close.",
+        "Most of my career has been on job sites installing custom cabinets and detailed trim — finish work that has to look right up close.",
       items: [
-        "Custom Cabinetry",
+        "Cabinet Installation",
         "Trim Carpentry",
         "Finish Work",
         "Precision Layout",
@@ -151,8 +154,8 @@ export const siteConfig = {
     },
     {
       year: "Craft",
-      title: "Carpenter",
-      detail: "Custom cabinetry and trim — precision, patience, and pride in the finish",
+      title: "Finish Carpenter",
+      detail: "Installed custom cabinetry and trim — precision, patience, and pride in the finish",
     },
     {
       year: "Degree",
@@ -168,7 +171,7 @@ export const siteConfig = {
   ],
 
   sectionCopy: {
-    aboutTitle: "Built by hand, refined in code",
+    aboutTitle: "Installed with care, refined in code",
     aboutDescription:
       "Full stack developer focused on scalable web applications, developer tools, and AI-powered products — with a path shaped by service, craft, and communication.",
     skillsTitle: "Skills across trades",
