@@ -2,6 +2,8 @@ import { useMemo, useState, type ReactNode } from "react";
 import { siteConfig } from "../config/site";
 import {
   formatRelativeDate,
+  getProjectDescription,
+  getProjectTitle,
   languageColor,
   type GitHubRepo,
 } from "../services/github";
@@ -137,14 +139,19 @@ function getDemoUrl(repo: GitHubRepo): string | null {
 function ProjectCard({ repo }: { repo: GitHubRepo }) {
   const isOrg = repo.owner.type === "Organization";
   const demoUrl = getDemoUrl(repo);
+  const title = getProjectTitle(repo);
+  const description = getProjectDescription(repo);
 
   return (
     <article className="panel-card group flex flex-col p-6 transition hover:-translate-y-1 hover:shadow-craft/10">
       <div className="mb-4 flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h3 className="truncate font-display font-semibold text-sand group-hover:text-craft-light">
-            {repo.name}
+            {title}
           </h3>
+          {title !== repo.name && (
+            <p className="mt-0.5 truncate font-mono text-[11px] text-muted/80">{repo.name}</p>
+          )}
           <p className="mt-1 font-mono text-xs text-muted">
             {isOrg ? (
               <span className="text-service-light">org / {repo.owner.login}</span>
@@ -167,7 +174,7 @@ function ProjectCard({ repo }: { repo: GitHubRepo }) {
       </div>
 
       <p className="prose-block mb-6 flex-1 text-sm text-muted line-clamp-3">
-        {repo.description || "No description provided."}
+        {description}
       </p>
 
       <div className="mb-4 flex flex-wrap gap-3 text-xs text-muted">

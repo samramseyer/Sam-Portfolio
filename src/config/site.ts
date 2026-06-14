@@ -52,6 +52,30 @@ export const siteConfig = {
   /** Repositories to hide from the projects grid (case-insensitive) */
   hiddenRepos: ["Sam-Portfolio", "project4"],
 
+  /** Override titles and descriptions for the Live from GitHub grid */
+  projectOverrides: {
+    "Vacation-Website": {
+      title: "Lakeside Cabins",
+      description:
+        "Responsive cabin rental site with a photo gallery, booking flow, and availability calendar — built with HTML, CSS, and JavaScript, deployed on GitHub Pages.",
+    },
+    "Todo-App": {
+      title: "Todo List App",
+      description:
+        "React single-page app with full todo CRUD, status filters, keyboard accessibility, and a validated contact form — routing, state, and UX patterns in one project.",
+    },
+    "Tech-Help": {
+      title: "TechHelp Hub",
+      description:
+        "Full-stack MERN Q&A forum with JWT auth, category browsing, upvotes, accepted answers, and reputation — a capstone-style community help platform.",
+    },
+    "Giphy-Shed": {
+      title: "Giphy Shed",
+      description:
+        "GIF search app powered by the Giphy REST API — fetch and display results in a responsive layout with clean CSS and live API integration.",
+    },
+  } as Record<string, { title?: string; description: string }>,
+
   about: [
     "I joined the U.S. Army in 2006 and was dual MOS-qualified as a 21E Heavy Equipment Operator and an 88M Motor Transport Operator — moving earth, running machinery, and keeping missions rolling on the road.",
     "Outside of the military, I've spent most of my life as a carpenter specializing in custom cabinetry and trim. That work taught me patience, precision, and pride in the finish — whether the project is a built-in bookshelf or a production web app.",

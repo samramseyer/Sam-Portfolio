@@ -270,3 +270,29 @@ export function languageColor(language: string | null): string {
 
   return colors[language ?? ""] ?? "#64748b";
 }
+
+function findProjectOverride(repo: GitHubRepo) {
+  const key = Object.keys(siteConfig.projectOverrides).find(
+    (name) => name.toLowerCase() === repo.name.toLowerCase(),
+  );
+
+  return key ? siteConfig.projectOverrides[key] : undefined;
+}
+
+export function getProjectTitle(repo: GitHubRepo): string {
+  return findProjectOverride(repo)?.title ?? repo.name;
+}
+
+export function getProjectDescription(repo: GitHubRepo): string {
+  const override = findProjectOverride(repo);
+  if (override) return override.description;
+
+  const githubDescription = repo.description?.trim();
+  if (githubDescription) return githubDescription;
+
+  if (repo.language) {
+    return `${repo.language} project from my GitHub portfolio — open the repo to explore the code.`;
+  }
+
+  return "Personal development project — open the repo to explore the code and README.";
+}
