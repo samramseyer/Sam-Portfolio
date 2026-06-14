@@ -1,6 +1,9 @@
+export const professionalTitle =
+  "Full Stack Developer building scalable web applications, developer tools, and AI-powered products." as const;
+
 export const siteConfig = {
   name: "Sam Ramseyer",
-  title: "Full Stack Developer",
+  title: professionalTitle,
   heroEyebrow: "Carpenter · Developer · Veteran",
   tagline:
     "I've spent most of my life building things with my hands — custom cabinets, precise trim, heavy equipment, and convoys. Today I bring that same care for craft, structure, and detail to full stack web development.",
@@ -80,33 +83,36 @@ export const siteConfig = {
     "I joined the U.S. Army in 2006 and was dual MOS-qualified as a 21E Heavy Equipment Operator and an 88M Motor Transport Operator — moving earth, running machinery, and keeping missions rolling on the road.",
     "Outside of the military, I've spent most of my life as a carpenter specializing in custom cabinetry and trim. That work taught me patience, precision, and pride in the finish — whether the project is a built-in bookshelf or a production web app.",
     "I hold a bachelor's degree in public relations and marketing, which shaped how I think about messaging, audience, and presenting work clearly. In 2025, I earned my Full Stack Software Engineering certificate from the University of Tennessee — bringing formal training in modern web development together with everything I learned on the job site and in the field.",
-    "Now I'm channeling that builder's mindset into full stack development — writing clean code, crafting responsive interfaces, and shipping projects that hold up over time.",
+    "Today I'm focused on building scalable web applications, developer tools, and AI-powered products — writing clean code, crafting responsive interfaces, and shipping work that holds up over time.",
   ],
 
   highlights: [
+    professionalTitle,
     "U.S. Army veteran (since 2006) — dual MOS 21E & 88M",
     "Custom cabinetry and trim carpenter",
     "Full Stack Software Engineering certificate — University of Tennessee (2025)",
     "Bachelor's in Public Relations & Marketing",
-    "Full stack projects synced live from GitHub",
   ],
 
   skills: [
     {
-      category: "Development",
+      category: "Technical Stack",
       theme: "dev",
       description:
-        "Building digital products with the same precision I learned laying out a kitchen — structure first, clean finish last.",
-      items: [
-        "Full Stack Software Engineering",
-        "React",
-        "JavaScript",
-        "TypeScript",
-        "HTML5",
-        "CSS3",
-        "Node.js",
-        "REST APIs",
-        "Git",
+        "Scalable web applications, developer tools, and AI-powered products — from interface to API to deployment.",
+      stack: [
+        {
+          label: "Frontend",
+          items: ["React", "Next.js", "TypeScript"],
+        },
+        {
+          label: "Backend",
+          items: ["Node.js", "PostgreSQL", "REST APIs"],
+        },
+        {
+          label: "Infrastructure",
+          items: ["Docker", "AWS", "CI/CD"],
+        },
       ],
     },
     {
@@ -157,17 +163,17 @@ export const siteConfig = {
       year: "2025",
       title: "Full Stack Engineer",
       detail:
-        "Full Stack Software Engineering certificate — University of Tennessee",
+        "Building scalable web applications, developer tools, and AI-powered products — UT Full Stack Software Engineering certificate",
     },
   ],
 
   sectionCopy: {
     aboutTitle: "Built by hand, refined in code",
     aboutDescription:
-      "From the job site to the keyboard — a path shaped by service, craft, and communication.",
+      "Full stack developer focused on scalable web applications, developer tools, and AI-powered products — with a path shaped by service, craft, and communication.",
     skillsTitle: "Skills across trades",
     skillsDescription:
-      "From bulldozers and convoys to cabinet shops and code editors — the same builder's mindset runs through all of it.",
+      "Scalable web applications, developer tools, and AI-powered products — built with the same builder's mindset I bring from the job site, the field, and the shop.",
     skillsEyebrow: "Skills & Background",
   },
 

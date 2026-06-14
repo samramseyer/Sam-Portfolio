@@ -14,7 +14,7 @@ const badgeClass = {
 
 export function Hero({ profile }: HeroProps) {
   return (
-    <section className="relative overflow-hidden px-6 pb-20 pt-36">
+    <section className="relative overflow-hidden px-4 pb-16 pt-28 sm:px-6 sm:pb-20 sm:pt-36">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="animate-pulse-glow absolute -right-24 top-20 h-72 w-72 rounded-full bg-craft/15 blur-3xl" />
         <div className="absolute -left-32 bottom-0 h-64 w-64 rounded-full bg-service/20 blur-3xl" />
@@ -27,6 +27,10 @@ export function Hero({ profile }: HeroProps) {
           <h1 className="text-4xl font-bold leading-[1.12] text-sand sm:text-5xl lg:text-6xl">
             Hi, I&apos;m <span className="text-gradient-hero">{siteConfig.name}</span>
           </h1>
+
+          <p className="max-w-2xl text-lg font-medium leading-snug text-sand sm:text-xl">
+            {siteConfig.title}
+          </p>
 
           <p className="prose-block max-w-2xl text-lg text-muted">{siteConfig.tagline}</p>
 

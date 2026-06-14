@@ -24,7 +24,7 @@ const themeStyles = {
 
 export function Skills() {
   return (
-    <section id="skills" className="section-workshop px-6 py-24">
+    <section id="skills" className="section-workshop px-4 py-16 sm:px-6 sm:py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeading
           eyebrow={siteConfig.sectionCopy.skillsEyebrow}
@@ -49,6 +49,8 @@ export function Skills() {
         <div className="mt-12 grid gap-6 lg:grid-cols-3">
           {siteConfig.skills.map((group) => {
             const theme = themeStyles[group.theme as keyof typeof themeStyles];
+            const stack = "stack" in group ? group.stack : null;
+            const items = "items" in group ? group.items : [];
 
             return (
               <article
@@ -62,16 +64,38 @@ export function Skills() {
 
                 <p className="prose-block mb-6 text-sm text-muted">{group.description}</p>
 
-                <ul className="flex flex-wrap gap-2">
-                  {group.items.map((skill) => (
-                    <li
-                      key={skill}
-                      className={`rounded-lg border px-3 py-2 font-mono text-xs leading-normal ${theme.badge}`}
-                    >
-                      {skill}
-                    </li>
-                  ))}
-                </ul>
+                {stack ? (
+                  <div className="space-y-5">
+                    {stack.map((section) => (
+                      <div key={section.label}>
+                        <p className="mb-2 font-mono text-[11px] uppercase tracking-wider text-muted">
+                          {section.label}
+                        </p>
+                        <ul className="flex flex-wrap gap-2">
+                          {section.items.map((skill) => (
+                            <li
+                              key={skill}
+                              className={`rounded-lg border px-3 py-2 font-mono text-xs leading-normal ${theme.badge}`}
+                            >
+                              {skill}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <ul className="flex flex-wrap gap-2">
+                    {items.map((skill) => (
+                      <li
+                        key={skill}
+                        className={`rounded-lg border px-3 py-2 font-mono text-xs leading-normal ${theme.badge}`}
+                      >
+                        {skill}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </article>
             );
           })}

@@ -38,8 +38,8 @@ jobs:
 
       - name: Publish build to docs/ on main
         run: |
-          rm -rf docs
-          cp -r dist docs
+          mkdir -p docs
+          rsync -a --delete dist/ docs/
 
       - name: Commit and push docs site
         run: |

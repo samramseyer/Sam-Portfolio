@@ -33,7 +33,7 @@ export function Projects({ repos, loading, error }: ProjectsProps) {
   const orgCount = repos.filter((repo) => repo.owner.type === "Organization").length;
 
   return (
-    <section id="projects" className="section-projects px-6 py-24">
+    <section id="projects" className="section-projects px-4 py-16 sm:px-6 sm:py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeading
           eyebrow="Projects"

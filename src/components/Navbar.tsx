@@ -1,12 +1,48 @@
+import { useEffect, useState } from "react";
 import { siteConfig } from "../config/site";
 
 export function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.matchMedia("(min-width: 768px)").matches) {
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <header className="site-header fixed inset-x-0 top-0 z-50">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <nav
+        className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6"
+        aria-label="Main navigation"
+      >
         <a
           href="#"
-          className="font-display text-sm font-bold tracking-tight text-sand transition hover:text-craft-light"
+          className="min-w-0 truncate font-display text-sm font-bold tracking-tight text-sand transition hover:text-craft-light sm:text-base"
+          onClick={closeMenu}
         >
           {siteConfig.name}
         </a>
@@ -24,15 +60,66 @@ export function Navbar() {
           ))}
         </ul>
 
-        <a
-          href={siteConfig.githubUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-secondary px-4 py-2 text-sm"
-        >
-          GitHub
-        </a>
+        <div className="flex items-center gap-3">
+          <a
+            href={siteConfig.githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-secondary hidden px-4 py-2 text-sm md:inline-flex"
+          >
+            GitHub
+          </a>
+
+          <button
+            type="button"
+            className="nav-toggle md:hidden"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span className={`nav-toggle-bar ${menuOpen ? "nav-toggle-bar-top-open" : ""}`} />
+            <span className={`nav-toggle-bar ${menuOpen ? "nav-toggle-bar-middle-open" : ""}`} />
+            <span className={`nav-toggle-bar ${menuOpen ? "nav-toggle-bar-bottom-open" : ""}`} />
+          </button>
+        </div>
       </nav>
+
+      <div
+        id="mobile-nav"
+        className={`nav-mobile md:hidden ${menuOpen ? "nav-mobile-open" : ""}`}
+        aria-hidden={!menuOpen}
+      >
+        <button
+          type="button"
+          className="nav-mobile-backdrop"
+          aria-label="Close menu"
+          tabIndex={menuOpen ? 0 : -1}
+          onClick={closeMenu}
+        />
+
+        <div className="nav-mobile-panel">
+          <ul className="nav-mobile-links">
+            {siteConfig.navLinks.map((link) => (
+              <li key={link.href}>
+                <a href={link.href} className="nav-mobile-link" onClick={closeMenu}>
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <a
+            href={siteConfig.githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-secondary nav-mobile-github"
+            onClick={closeMenu}
+          >
+            GitHub
+          </a>
+        </div>
+      </div>
     </header>
   );
 }
