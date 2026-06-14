@@ -53,7 +53,7 @@ export const siteConfig = {
     { label: "Army 2006 · 21E & 88M", style: "army" },
   ] as const,
   /** Add GitHub organization slugs to include their public repos */
-  organizations: [] as string[],
+  organizations: ["Pinnacle-Designs"] as string[],
 
   /** Repositories to hide from the projects grid (case-insensitive) */
   hiddenRepos: ["Sam-Portfolio", "project4"],
@@ -80,6 +80,27 @@ export const siteConfig = {
       title: "Giphy Shed",
       description:
         "GIF search app powered by the Giphy REST API — fetch and display results in a responsive layout with clean CSS and live API integration.",
+    },
+    "Starcraft-DS": {
+      title: "Starcraft Design System",
+      description:
+        "TypeScript design system and UI work for Pinnacle Designs — shared components and patterns for client-facing web projects.",
+    },
+    "lone-stone": {
+      title: "Lone Stone",
+      description:
+        "Responsive marketing site for Lone Stone — built with Pinnacle Designs as a client web project deployed on GitHub Pages.",
+    },
+    "Homestead_Woodworks": {
+      title: "Homestead Woodworks",
+      description:
+        "Craft-focused business website for Homestead Woodworks — HTML/CSS layout and deployment work with Pinnacle Designs.",
+    },
+    "Pinnacle-Resturant-Manager": {
+      title: "Pinnacle Restaurant Manager",
+      description:
+        "TypeScript restaurant management app built with Pinnacle Designs — live Vercel demo with GitHub Pages deployment.",
+      demoUrl: "https://pinnacle-resturant-manager.vercel.app",
     },
   } as Record<string, { title?: string; description: string; demoUrl?: string }>,
 

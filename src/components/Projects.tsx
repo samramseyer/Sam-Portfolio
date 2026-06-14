@@ -39,7 +39,7 @@ export function Projects({ repos, loading, error }: ProjectsProps) {
         <SectionHeading
           eyebrow="Projects"
           title="Live from GitHub"
-          description="Repositories pulled directly from my profile and configured organizations, updated automatically."
+          description="Repositories from my GitHub profile and Pinnacle Designs — updated automatically from the GitHub API."
         />
 
         <div className="mt-8 flex flex-wrap gap-3">
