@@ -13,16 +13,28 @@ interface GitHubData {
   error: string | null;
 }
 
-export function useGitHubData(): GitHubData {
-  const [profile, setProfile] = useState<GitHubProfile | null>(null);
-  const [repos, setRepos] = useState<GitHubRepo[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface UseGitHubDataOptions {
+  initialProfile?: GitHubProfile | null;
+  initialRepos?: GitHubRepo[];
+  initialError?: string | null;
+}
+
+export function useGitHubData(options: UseGitHubDataOptions = {}): GitHubData {
+  const hasInitialData = (options.initialRepos?.length ?? 0) > 0;
+
+  const [profile, setProfile] = useState<GitHubProfile | null>(options.initialProfile ?? null);
+  const [repos, setRepos] = useState<GitHubRepo[]>(options.initialRepos ?? []);
+  const [loading, setLoading] = useState(!hasInitialData && !options.initialError);
+  const [error, setError] = useState<string | null>(options.initialError ?? null);
 
   useEffect(() => {
     let cancelled = false;
 
-    async function load() {
+    async function refresh() {
+      if (!hasInitialData) {
+        setLoading(true);
+      }
+
       try {
         const [profileData, repoData] = await Promise.all([
           fetchGitHubProfile(),
@@ -35,7 +47,7 @@ export function useGitHubData(): GitHubData {
           setError(null);
         }
       } catch (err) {
-        if (!cancelled) {
+        if (!cancelled && !hasInitialData) {
           setError(err instanceof Error ? err.message : "Failed to load GitHub data");
         }
       } finally {
@@ -45,12 +57,12 @@ export function useGitHubData(): GitHubData {
       }
     }
 
-    load();
+    refresh();
 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [hasInitialData]);
 
   return { profile, repos, loading, error };
 }

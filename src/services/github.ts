@@ -36,8 +36,12 @@ const GITHUB_API = import.meta.env.DEV ? "/api/github" : "https://api.github.com
 const CACHE_TTL_MS = 10 * 60 * 1000;
 const CACHE_PREFIX = "github-cache:";
 
+function getClientToken(): string | undefined {
+  return import.meta.env.VITE_GITHUB_TOKEN || import.meta.env.PUBLIC_GITHUB_TOKEN;
+}
+
 function hasToken(): boolean {
-  return Boolean(import.meta.env.VITE_GITHUB_TOKEN);
+  return Boolean(getClientToken());
 }
 
 function authHeaders(): HeadersInit {
@@ -46,7 +50,7 @@ function authHeaders(): HeadersInit {
     "X-GitHub-Api-Version": "2022-11-28",
   };
 
-  const token = import.meta.env.VITE_GITHUB_TOKEN;
+  const token = getClientToken();
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
@@ -55,6 +59,8 @@ function authHeaders(): HeadersInit {
 }
 
 function getCached<T>(url: string): T | null {
+  if (typeof sessionStorage === "undefined") return null;
+
   try {
     const raw = sessionStorage.getItem(`${CACHE_PREFIX}${url}`);
     if (!raw) return null;
@@ -72,6 +78,8 @@ function getCached<T>(url: string): T | null {
 }
 
 function setCached<T>(url: string, data: T): void {
+  if (typeof sessionStorage === "undefined") return;
+
   try {
     sessionStorage.setItem(
       `${CACHE_PREFIX}${url}`,

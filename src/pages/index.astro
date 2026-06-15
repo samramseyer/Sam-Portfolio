@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PortfolioApp from "../components/PortfolioApp";
+import { fetchBuildGitHubData } from "../lib/github-server";
+
+const githubData = await fetchBuildGitHubData();
+---
+
+<BaseLayout>
+  <PortfolioApp
+    client:load
+    profile={githubData.profile}
+    repos={githubData.repos}
+    initialError={githubData.error}
+  />
+</BaseLayout>
