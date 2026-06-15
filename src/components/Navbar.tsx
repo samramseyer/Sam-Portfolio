@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { siteConfig } from "../config/site";
 
+const DESKTOP_NAV_MIN_WIDTH = 1024;
+
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -21,14 +23,15 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
-    const handleResize = () => {
-      if (window.matchMedia("(min-width: 768px)").matches) {
-        setMenuOpen(false);
-      }
+    const mediaQuery = window.matchMedia(`(min-width: ${DESKTOP_NAV_MIN_WIDTH}px)`);
+
+    const handleViewportChange = () => {
+      if (mediaQuery.matches) setMenuOpen(false);
     };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    handleViewportChange();
+    mediaQuery.addEventListener("change", handleViewportChange);
+    return () => mediaQuery.removeEventListener("change", handleViewportChange);
   }, []);
 
   const closeMenu = () => setMenuOpen(false);
@@ -47,7 +50,7 @@ export function Navbar() {
           {siteConfig.name}
         </a>
 
-        <ul className="hidden items-center gap-8 md:flex">
+        <ul className="hidden items-center gap-8 lg:flex">
           {siteConfig.navLinks.map((link) => (
             <li key={link.href}>
               <a
@@ -65,14 +68,14 @@ export function Navbar() {
             href={siteConfig.githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-secondary hidden px-4 py-2 text-sm md:inline-flex"
+            className="btn-secondary hidden px-4 py-2 text-sm lg:inline-flex"
           >
             GitHub
           </a>
 
           <button
             type="button"
-            className="nav-toggle md:hidden"
+            className="nav-toggle inline-flex lg:hidden"
             aria-expanded={menuOpen}
             aria-controls="mobile-nav"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -87,8 +90,9 @@ export function Navbar() {
 
       <div
         id="mobile-nav"
-        className={`nav-mobile md:hidden ${menuOpen ? "nav-mobile-open" : ""}`}
+        className={`nav-mobile lg:hidden ${menuOpen ? "nav-mobile-open" : ""}`}
         aria-hidden={!menuOpen}
+        inert={menuOpen ? undefined : true}
       >
         <button
           type="button"
