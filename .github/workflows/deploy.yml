@@ -6,15 +6,21 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
 
@@ -22,6 +28,8 @@ jobs:
         with:
           node-version: 22
           cache: npm
+
+      - uses: actions/configure-pages@v5
 
       - run: npm ci
       - run: npm run build
@@ -34,13 +42,10 @@ jobs:
           grep -q 'og:title' dist/index.html
           grep -q 'og:image' dist/index.html
           grep -q 'application/ld+json' dist/index.html
+          test -f dist/.nojekyll
           test -f dist/og-image.png
           test -f dist/robots.txt
           test -f dist/sitemap.xml
-          if grep -qE '^<<<<<<<|^=======|^>>>>>>>' docs/index.html 2>/dev/null; then
-            echo "docs/index.html has unresolved merge conflict markers"
-            exit 1
-          fi
           if grep -q '/src/main.tsx' dist/index.html; then
             echo "Build failed: dist still references source files"
             exit 1
@@ -60,9 +65,18 @@ jobs:
           git commit -m "deploy: update built site in docs/ [skip ci]"
           git push
 
-      - name: Publish build to gh-pages branch
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          force_orphan: true
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

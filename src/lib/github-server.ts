@@ -65,12 +65,33 @@ function isHidden(name: string): boolean {
   return hidden.includes(name.toLowerCase());
 }
 
+function shouldPreferRepo(current: GitHubRepo, candidate: GitHubRepo): boolean {
+  if (current.fork && !candidate.fork) return true;
+  if (!current.fork && candidate.fork) return false;
+
+  if (current.owner.type === "User" && candidate.owner.type === "Organization") {
+    return true;
+  }
+
+  if (current.owner.type === "Organization" && candidate.owner.type === "User") {
+    return false;
+  }
+
+  return new Date(candidate.updated_at).getTime() > new Date(current.updated_at).getTime();
+}
+
 function mergeRepos(repoLists: GitHubRepo[][]): GitHubRepo[] {
-  const merged = new Map<number, GitHubRepo>();
+  const merged = new Map<string, GitHubRepo>();
 
   for (const repo of repoLists.flat()) {
     if (isHidden(repo.name)) continue;
-    merged.set(repo.id, repo);
+
+    const key = repo.name.toLowerCase();
+    const existing = merged.get(key);
+
+    if (!existing || shouldPreferRepo(existing, repo)) {
+      merged.set(key, repo);
+    }
   }
 
   return Array.from(merged.values()).sort(
