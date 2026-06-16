@@ -100,23 +100,31 @@ function mergeRepos(repoLists: GitHubRepo[][]): GitHubRepo[] {
 }
 
 async function fetchGitHubProfile(): Promise<GitHubProfile> {
+  const publicUrl = `${GITHUB_API}/users/${siteConfig.githubUsername}`;
+
   if (getToken()) {
-    return githubFetch(`${GITHUB_API}/user`).then((response) => response.json());
+    const response = await fetch(`${GITHUB_API}/user`, { headers: authHeaders() });
+    if (response.ok) {
+      return response.json() as Promise<GitHubProfile>;
+    }
   }
 
-  return githubFetch(`${GITHUB_API}/users/${siteConfig.githubUsername}`).then((response) =>
-    response.json(),
-  );
+  return githubFetch(publicUrl).then((response) => response.json());
 }
 
 async function fetchUserRepos(): Promise<GitHubRepo[]> {
+  const publicUrl = `${GITHUB_API}/users/${siteConfig.githubUsername}/repos?per_page=100&sort=updated&direction=desc`;
+
   if (getToken()) {
-    const url = `${GITHUB_API}/user/repos?affiliation=owner,organization_member,collaborator&per_page=100&sort=updated&direction=desc`;
-    return fetchAllPages<GitHubRepo>(url);
+    const authedUrl = `${GITHUB_API}/user/repos?affiliation=owner,organization_member,collaborator&per_page=100&sort=updated&direction=desc`;
+    try {
+      return await fetchAllPages<GitHubRepo>(authedUrl);
+    } catch {
+      // Actions GITHUB_TOKEN may lack repo scope — fall back to public user repos.
+    }
   }
 
-  const url = `${GITHUB_API}/users/${siteConfig.githubUsername}/repos?per_page=100&sort=updated&direction=desc`;
-  return fetchAllPages<GitHubRepo>(url);
+  return fetchAllPages<GitHubRepo>(publicUrl);
 }
 
 async function fetchOrgRepos(org: string): Promise<GitHubRepo[]> {

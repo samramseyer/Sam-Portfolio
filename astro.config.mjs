@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   site: "https://samramseyer.com",
-  base: "./",
+  base: "/docs/",
   output: "static",
   integrations: [react()],
   vite: {
