@@ -69,6 +69,7 @@ export const siteConfig = {
       title: "Todo List App",
       description:
         "React single-page app with full todo CRUD, status filters, keyboard accessibility, and a validated contact form — routing, state, and UX patterns in one project.",
+      demoUrl: "https://samramseyer.github.io/Todo-App/",
     },
     "kaban-board": {
       title: "Kaban Board",
