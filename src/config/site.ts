@@ -69,7 +69,6 @@ export const siteConfig = {
       title: "Todo List App",
       description:
         "React single-page app with full todo CRUD, status filters, keyboard accessibility, and a validated contact form — routing, state, and UX patterns in one project.",
-      demoUrl: "https://samramseyer.github.io/Todo-App/",
     },
     "kaban-board": {
       title: "Kaban Board",
@@ -91,16 +90,19 @@ export const siteConfig = {
       title: "Starcraft Design System",
       description:
         "TypeScript design system and UI work for Pinnacle Designs — shared components and patterns for client-facing web projects.",
+      demoUrl: "https://pinnacle-designs.github.io/Starcraft-DS/",
     },
     "lone-stone": {
       title: "Lone Stone",
       description:
         "Responsive marketing site for Lone Stone — built with Pinnacle Designs as a client web project deployed on GitHub Pages.",
+      demoUrl: "https://pinnacle-designs.github.io/lone-stone/",
     },
     "Homestead_Woodworks": {
       title: "Homestead Woodworks",
       description:
         "Craft-focused business website for Homestead Woodworks — HTML/CSS layout and deployment work with Pinnacle Designs.",
+      demoUrl: "https://pinnacle-designs.github.io/Homestead_Woodworks/",
     },
     "Pinnacle-Resturant-Manager": {
       title: "Pinnacle Restaurant Manager",

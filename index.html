@@ -18,8 +18,15 @@
         var target = null;
         if (host === "samramseyer.com" || host === "www.samramseyer.com") {
           target = "/docs/" + location.search + location.hash;
-        } else if (host.indexOf("github.io") !== -1 && path.indexOf("Sam-Portfolio") !== -1) {
-          target = "/Sam-Portfolio/docs/" + location.search + location.hash;
+        } else if (host.indexOf("github.io") !== -1) {
+          if (path === "/" || path === "") {
+            target = "/Sam-Portfolio/docs/" + location.search + location.hash;
+          } else if (
+            path.indexOf("/Sam-Portfolio") !== -1 &&
+            path.indexOf("/docs") === -1
+          ) {
+            target = "/Sam-Portfolio/docs/" + location.search + location.hash;
+          }
         }
 
         if (target) {

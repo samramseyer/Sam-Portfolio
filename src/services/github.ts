@@ -331,7 +331,8 @@ export function getProjectDemoUrl(repo: GitHubRepo): string | null {
   if (override?.demoUrl) return override.demoUrl;
   if (repo.homepage) return repo.homepage;
   if (repo.has_pages) {
-    return `https://${repo.owner.login}.github.io/${repo.name}/`;
+    const owner = repo.owner.login.toLowerCase();
+    return `https://${owner}.github.io/${repo.name}/`;
   }
   return null;
 }
