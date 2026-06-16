@@ -71,6 +71,12 @@ export const siteConfig = {
         "React single-page app with full todo CRUD, status filters, keyboard accessibility, and a validated contact form — routing, state, and UX patterns in one project.",
       demoUrl: "https://samramseyer.github.io/Todo-App/",
     },
+    "kaban-board": {
+      title: "Kaban Board",
+      description:
+        "Drag-and-drop kanban board for software development workflows — columns, cards, and task management built with React and @dnd-kit.",
+      demoUrl: "https://samramseyer.github.io/kaban-board/",
+    },
     "Tech-Help": {
       title: "TechHelp Hub",
       description:
