@@ -77,6 +77,12 @@ export const siteConfig = {
         "Drag-and-drop kanban board for software development workflows — columns, cards, and task management built with React and @dnd-kit.",
       demoUrl: "https://samramseyer.github.io/kaban-board/",
     },
+    "RooVille": {
+      title: "RooVille",
+      description:
+        "Interactive coastal town builder — create your avatar and build houses, businesses, docks, boats, and zoos. Single-player, runs locally in the browser.",
+      demoUrl: "https://samramseyer.github.io/RooVille/",
+    },
     "Tech-Help": {
       title: "TechHelp Hub",
       description:
