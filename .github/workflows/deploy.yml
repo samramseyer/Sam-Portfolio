@@ -37,6 +37,21 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: cp dist/index.html dist/404.html
 
+      - name: Publish portfolio build to docs/
+        run: |
+          mkdir -p docs
+          rsync -a --delete dist/ docs/
+
+      - name: Build and embed Todo List App demo
+        run: |
+          git clone --depth 1 https://github.com/samramseyer/Todo-App.git /tmp/todo-app
+          cd /tmp/todo-app
+          npm ci
+          PUBLIC_URL=/docs/Todo-App npm run build
+          cp build/index.html build/404.html
+          mkdir -p "$GITHUB_WORKSPACE/docs/Todo-App"
+          rsync -a --delete build/ "$GITHUB_WORKSPACE/docs/Todo-App/"
+
       - name: Verify production build
         run: |
           grep -q 'og:title' dist/index.html
@@ -50,11 +65,6 @@ jobs:
             echo "Build failed: dist still references source files"
             exit 1
           fi
-
-      - name: Publish build to docs/ on main
-        run: |
-          mkdir -p docs
-          rsync -a --delete dist/ docs/
 
       - name: Commit and push docs site
         run: |
