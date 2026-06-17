@@ -52,6 +52,17 @@ jobs:
           mkdir -p "$GITHUB_WORKSPACE/docs/Todo-App"
           rsync -a --delete build/ "$GITHUB_WORKSPACE/docs/Todo-App/"
 
+      - name: Build and embed RooVille demo
+        run: |
+          git clone --depth 1 https://github.com/samramseyer/RooVille.git /tmp/rooville
+          cd /tmp/rooville
+          npm ci
+          VITE_BASE=/docs/RooVille/ npm run build:web
+          cp dist/app.html dist/index.html
+          cp dist/app.html dist/404.html
+          mkdir -p "$GITHUB_WORKSPACE/docs/RooVille"
+          rsync -a --delete dist/ "$GITHUB_WORKSPACE/docs/RooVille/"
+
       - name: Verify production build
         run: |
           grep -q 'og:title' dist/index.html

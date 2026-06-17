@@ -81,7 +81,7 @@ export const siteConfig = {
       title: "RooVille",
       description:
         "Interactive coastal town builder — create your avatar and build houses, businesses, docks, boats, and zoos. Single-player, runs locally in the browser.",
-      demoUrl: "https://samramseyer.github.io/RooVille/",
+      demoUrl: "https://samramseyer.com/docs/RooVille/",
     },
     "Tech-Help": {
       title: "TechHelp Hub",
